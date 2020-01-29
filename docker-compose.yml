@@ -1,0 +1,17 @@
+version: '3'
+
+services: 
+    wirefly:
+        image: jboss/wildfly
+        container_name: wirefly-service
+        ports: 
+            - "9990:9990"
+        command: "/opt/jboss/wildfly/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0"
+        volumes: 
+            - "./config.yml:/opt/jboss/SpigotBuyerCheck/config.yml"    
+    bot:
+        build: ./
+        restart: always
+        container_name: service-bot
+        links: 
+            - wirefly
