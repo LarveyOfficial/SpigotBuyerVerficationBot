@@ -10,13 +10,25 @@ I do not own nor have the rights to _https://www.spigotmc.org/resources/spigotbu
 
 2. Go under Bot, and create a new Bot. Copy the token. **DO NOT SHARE IT**. You will set this token in your Config.py file.
 
+3. Go to _https://cloud.mongodb.com/_ and setup a new Account
+
+4. Follow the instructions and start a new Cluster.
+
+5. Select the free teir.
+
+6. Once cluster is initialized continue to Network Access and add 0.0.0.0 to the IP list
+
+7. Then Navigate to Database Access and make a Admin Account
+
+8. Go to The cluster and click CONNECT
+
 **Instructions**
 
 1. Clone Repo or download as Zip
 
 2. Install requirements.txt
 
-3. Modify sampleConfig.py except for BuyerPageURL to your info.
+3. Modify sampleConfig.py except for BuyerPageURL to your info. For DevIDs format like this: [123344532432, 23213324, 32424324324]
 
 4. Visit _https://www.spigotmc.org/resources/spigotbuyercheck.45155/_
 
@@ -26,3 +38,26 @@ I do not own nor have the rights to _https://www.spigotmc.org/resources/spigotbu
 
 7. Start main.py with ``python3 main.py``
 
+**Docs**
+
+>_**User Commands**_
+
+``v!help`` - Displays help Command
+
+``v!verify <SpigotID>`` - Starts Verification Proccess
+
+``v!StatusCheck`` - After **v!verify** This will check if you changed your status to the secretCode.
+
+``v!role list`` - List Current _Premium_ Plugins users can join.
+
+``v!role join <pluginName>`` - Adds user to Plugin Role if they are verified and have purchased the plugin.
+
+``v!role leave <pluginName>`` - Removes user from Plugin Role if they are in it.
+
+>_**Admin Commands**_.
+
+_Admins must have their Discord ID's in Config>DevIds_
+
+``v!role add`` - Starts proccess of adding a role to the DB/List
+
+``v!role remove`` - Removes a Role from the DB/List
