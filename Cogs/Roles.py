@@ -34,15 +34,8 @@ class Roles(commands.Cog):
 
     @roles.command()
     async def join(self, ctx, *, name: str = None):
-        if ctx.guild is None:  # checks is sent in Server
-            print("User Sent message Via DM")
-            embed = discord.Embed(
-                title="ERROR",
-                description="This command can only be used in a Server.",
-                timestamp=datetime.datetime.utcnow(),
-                color=Config.ERRORCOLOR
-            )
-            await ctx.send(embed=embed)
+        if ctx.guild is None:
+            print("Message in DM")
         else:
             print(f"Join command initiated by {ctx.author.name}")
             if name is None:
@@ -129,14 +122,8 @@ class Roles(commands.Cog):
 
     @roles.command()
     async def list(self, ctx):
-        if ctx.guild is None:  # Checks if user sent in Server or not
-            embed = discord.Embed(
-                title="ERROR",
-                description="This command can only be used in a Server.",
-                timestamp=datetime.datetime.utcnow(),
-                color=Config.ERRORCOLOR
-            )
-            await ctx.send(embed=embed)
+        if ctx.guild is None:
+            print("Message in DM")
         else:
             all_docs = Config.PLUGINS.find({})
             str = "Current Plugins:\n\n"
@@ -151,15 +138,9 @@ class Roles(commands.Cog):
 
     @roles.command()
     async def leave(self, ctx, *, name: str = None):
-        if ctx.guild is None:  # user has sent message in DM
-            embed = discord.Embed(
-                title="ERROR",
-                description="This command can only be used in a Server.",
-                timestamp=datetime.datetime.utcnow(),
-                color=Config.ERRORCOLOR
-            )
-            await ctx.send(embed=embed)
-        else:  # use has not sent command in DM
+        if ctx.guild is None:
+            print("Message in DM")
+        else:
             if name is None:
                 embed = discord.Embed(
                     title="Role Join Error",
@@ -206,97 +187,100 @@ class Roles(commands.Cog):
     @roles.command()
     async def add(self, ctx):
         if ctx.author.id in Config.DEVIDS:
-            embed = discord.Embed(
-                title="Role Addition",
-                description="What is the name of the role?",
-                color=Config.MAINCOLOR
-            )
-            await ctx.send(embed=embed)
-            while True:
-                msg = await self.bot.wait_for('message')
-                if msg.author.id == ctx.author.id and msg.channel.id == ctx.channel.id:
-                    name = str(msg.content)
-                    break
-            embed = discord.Embed(
-                title="Role Addition",
-                description="What is the ID for the Plugin on Spigot?",
-                color=Config.MAINCOLOR
-            )
-            await ctx.send(embed=embed)
-            while True:
-                msg = await self.bot.wait_for('message')
-                if msg.author.id == ctx.author.id and msg.channel.id == ctx.channel.id:
-                    try:
-                        ID = int(msg.content)
+            if ctx.guild is None:
+                print("Message in DM")
+            else:
+                embed = discord.Embed(
+                    title="Role Addition",
+                    description="What is the name of the role?",
+                    color=Config.MAINCOLOR
+                )
+                await ctx.send(embed=embed)
+                while True:
+                    msg = await self.bot.wait_for('message')
+                    if msg.author.id == ctx.author.id and msg.channel.id == ctx.channel.id:
+                        name = str(msg.content)
                         break
-                    except:
-                        embed = discord.Embed(
-                            title="ERROR",
-                            description="That is not a Valid ID",
-                            color=Config.ERRORCOLOR
-                        )
-                        await ctx.send(embed=embed)
-                        continue
-            embed = discord.Embed(
-                title="Role Addition",
-                description="What is the ID for the Discord Role?",
-                color=Config.MAINCOLOR
-            )
-            await ctx.send(embed=embed)
-            while True:
-                msg = await self.bot.wait_for('message')
-                if msg.author.id == ctx.author.id and msg.channel.id == ctx.channel.id:
-                    try:
-                        CheckID = int(msg.content)
-                        role = discord.utils.get(ctx.guild.roles, id=CheckID)
-                        if role is None:
+                embed = discord.Embed(
+                    title="Role Addition",
+                    description="What is the ID for the Plugin on Spigot?",
+                    color=Config.MAINCOLOR
+                )
+                await ctx.send(embed=embed)
+                while True:
+                    msg = await self.bot.wait_for('message')
+                    if msg.author.id == ctx.author.id and msg.channel.id == ctx.channel.id:
+                        try:
+                            ID = int(msg.content)
+                            break
+                        except:
                             embed = discord.Embed(
                                 title="ERROR",
                                 description="That is not a Valid ID",
                                 color=Config.ERRORCOLOR
                             )
                             await ctx.send(embed=embed)
-                        else:
-                            DiscordID = CheckID
+                            continue
+                embed = discord.Embed(
+                    title="Role Addition",
+                    description="What is the ID for the Discord Role?",
+                    color=Config.MAINCOLOR
+                )
+                await ctx.send(embed=embed)
+                while True:
+                    msg = await self.bot.wait_for('message')
+                    if msg.author.id == ctx.author.id and msg.channel.id == ctx.channel.id:
+                        try:
+                            CheckID = int(msg.content)
+                            role = discord.utils.get(ctx.guild.roles, id=CheckID)
+                            if role is None:
+                                embed = discord.Embed(
+                                    title="ERROR",
+                                    description="That is not a Valid ID",
+                                    color=Config.ERRORCOLOR
+                                )
+                                await ctx.send(embed=embed)
+                            else:
+                                DiscordID = CheckID
+                                break
+                        except:
+                            embed = discord.Embed(
+                                title="ERROR",
+                                description="That is not a Valid ID",
+                                color=Config.ERRORCOLOR
+                            )
+                            await ctx.send(embed=embed)
+                            continue
+                embed = discord.Embed(
+                    title="Role Addition",
+                    description=f"Is this Correct?\nRole Name: {name}\nPlugin ID: {ID}\nRole ID: {DiscordID}",
+                    color=Config.MAINCOLOR
+                )
+                msg = await ctx.send(embed=embed)
+                await msg.add_reaction("✅")
+                await msg.add_reaction("🚫")
+                while True:
+                    reaction, reactor = await self.bot.wait_for("reaction_add")
+                    if reactor.id is ctx.author.id:
+                        if reaction.emoji == "🚫":
+                            embed = discord.Embed(
+                                title="Role Cancelation",
+                                description="Canceled Addition",
+                                color=Config.ERRORCOLOR
+                            )
+                            await ctx.send(embed=embed)
+                            await msg.delete()
                             break
-                    except:
-                        embed = discord.Embed(
-                            title="ERROR",
-                            description="That is not a Valid ID",
-                            color=Config.ERRORCOLOR
-                        )
-                        await ctx.send(embed=embed)
-                        continue
-            embed = discord.Embed(
-                title="Role Addition",
-                description=f"Is this Correct?\nRole Name: {name}\nPlugin ID: {ID}\nRole ID: {DiscordID}",
-                color=Config.MAINCOLOR
-            )
-            msg = await ctx.send(embed=embed)
-            await msg.add_reaction("✅")
-            await msg.add_reaction("🚫")
-            while True:
-                reaction, reactor = await self.bot.wait_for("reaction_add")
-                if reactor.id is ctx.author.id:
-                    if reaction.emoji == "🚫":
-                        embed = discord.Embed(
-                            title="Role Cancelation",
-                            description="Canceled Addition",
-                            color=Config.ERRORCOLOR
-                        )
-                        await ctx.send(embed=embed)
-                        await msg.delete()
-                        break
-                    elif reaction.emoji == "✅":
-                        Config.PLUGINS.insert_one({'name': name.lower(), 'id': ID, 'roleid': DiscordID})
-                        embed = discord.Embed(
-                            title="Role Confirmation",
-                            description="Added Role to DB!",
-                            color=Config.MAINCOLOR
-                        )
-                        await ctx.send(embed=embed)
-                        await msg.delete()
-                        break
+                        elif reaction.emoji == "✅":
+                            Config.PLUGINS.insert_one({'name': name.lower(), 'id': ID, 'roleid': DiscordID})
+                            embed = discord.Embed(
+                                title="Role Confirmation",
+                                description="Added Role to DB!",
+                                color=Config.MAINCOLOR
+                            )
+                            await ctx.send(embed=embed)
+                            await msg.delete()
+                            break
 
         else:
             embed = discord.Embed(
@@ -309,65 +293,68 @@ class Roles(commands.Cog):
     @roles.command()
     async def delete(self, ctx):
         if ctx.author.id in Config.DEVIDS:
-            embed = discord.Embed(
-                title="Role Addition",
-                description="What is the ID for the Plugin on Spigot?",
-                color=Config.MAINCOLOR
-            )
-            await ctx.send(embed=embed)
-            while True:
-                msg = await self.bot.wait_for('message')
-                if msg.author.id == ctx.author.id and msg.channel.id == ctx.channel.id:
-                    try:
-                        ID = int(msg.content)
-                        break
-                    except:
-                        embed = discord.Embed(
-                            title="ERROR",
-                            description="That is not a Valid ID",
-                            color=Config.ERRORCOLOR
-                        )
-                        await ctx.send(embed=embed)
-                        continue
-            doc = Config.PLUGINS.find_one({'id': ID})
-            if doc is None:
+            if ctx.guild is None:
+                print("Message in DM")
+            else:
                 embed = discord.Embed(
-                    title="ERROR",
-                    description="That Plugin Does not exist in the DB",
+                    title="Role Addition",
+                    description="What is the ID for the Plugin on Spigot?",
                     color=Config.MAINCOLOR
                 )
                 await ctx.send(embed=embed)
-            else:
-                embed = discord.Embed(
-                    title="Role Removal",
-                    description=f"Are you sure you want to remove this role?\nName: {doc['name']}\nID: {ID}\nDiscord ID: {doc['roleid']}",
-                    color=Config.MAINCOLOR
-                )
-                msg = await ctx.send(embed=embed)
-                await msg.add_reaction("✅")
-                await msg.add_reaction("🚫")
                 while True:
-                    reaction, reactor = await self.bot.wait_for("reaction_add")
-                    if reactor.id is ctx.author.id:
-                        if reaction.emoji == "🚫":
+                    msg = await self.bot.wait_for('message')
+                    if msg.author.id == ctx.author.id and msg.channel.id == ctx.channel.id:
+                        try:
+                            ID = int(msg.content)
+                            break
+                        except:
                             embed = discord.Embed(
-                                title="Role Removal",
-                                description="Canceled Removal",
+                                title="ERROR",
+                                description="That is not a Valid ID",
                                 color=Config.ERRORCOLOR
                             )
                             await ctx.send(embed=embed)
-                            await msg.delete()
-                            break
-                        elif reaction.emoji == "✅":
-                            Config.PLUGINS.delete_one({'id': ID})
-                            embed = discord.Embed(
-                                title="Removal Confirmation",
-                                description="Removed Role from DB!",
-                                color=Config.MAINCOLOR
-                            )
-                            await ctx.send(embed=embed)
-                            await msg.delete()
-                            break
+                            continue
+                doc = Config.PLUGINS.find_one({'id': ID})
+                if doc is None:
+                    embed = discord.Embed(
+                        title="ERROR",
+                        description="That Plugin Does not exist in the DB",
+                        color=Config.MAINCOLOR
+                    )
+                    await ctx.send(embed=embed)
+                else:
+                    embed = discord.Embed(
+                        title="Role Removal",
+                        description=f"Are you sure you want to remove this role?\nName: {doc['name']}\nID: {ID}\nDiscord ID: {doc['roleid']}",
+                        color=Config.MAINCOLOR
+                    )
+                    msg = await ctx.send(embed=embed)
+                    await msg.add_reaction("✅")
+                    await msg.add_reaction("🚫")
+                    while True:
+                        reaction, reactor = await self.bot.wait_for("reaction_add")
+                        if reactor.id is ctx.author.id:
+                            if reaction.emoji == "🚫":
+                                embed = discord.Embed(
+                                    title="Role Removal",
+                                    description="Canceled Removal",
+                                    color=Config.ERRORCOLOR
+                                )
+                                await ctx.send(embed=embed)
+                                await msg.delete()
+                                break
+                            elif reaction.emoji == "✅":
+                                Config.PLUGINS.delete_one({'id': ID})
+                                embed = discord.Embed(
+                                    title="Removal Confirmation",
+                                    description="Removed Role from DB!",
+                                    color=Config.MAINCOLOR
+                                )
+                                await ctx.send(embed=embed)
+                                await msg.delete()
+                                break
 
         else:
             embed = discord.Embed(

@@ -71,3 +71,5 @@ _Admins must have their Discord ID's in Config > [DevIds](README.md:39)_
 ``v!role add`` - Starts process of adding a role to the DB/List
 
 ``v!role remove`` - Removes a Role from the DB/List
+
+``v!restart`` - Restarts Roles and Verification Commands.
