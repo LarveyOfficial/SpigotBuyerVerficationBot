@@ -66,7 +66,7 @@ I do not own nor have the rights to _https://www.spigotmc.org/resources/spigotbu
 
 >_**Admin Commands**_.
 
-_Admins must have their Discord ID's in Config > [DevIds](README.md:39)_
+_Admins must have their Discord ID's in Config > DevIds_
 
 ``v!role add`` - Starts process of adding a role to the DB/List
 
