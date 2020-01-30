@@ -2,8 +2,6 @@ import logging
 import random
 import string
 
-import pymongo
-import asyncio
 import Config
 import cloudscraper
 import discord
@@ -21,7 +19,7 @@ bot.remove_command("help")
 for cog in cogs:
     bot.load_extension("Cogs." + cog)
 
-logging.basicConfig(level=logging.INFO, format="illyria Verification [%(levelname)s] | %(message)s")
+logging.basicConfig(level=logging.INFO, format="Verification [%(levelname)s] | %(message)s")
 
 
 def dev(ctx):
@@ -69,7 +67,7 @@ async def on_member_join(member):
     if doc is not None:
         if doc['verified']:
             print("Verified Member Joined, Giving them Role")
-            role = discord.utils.get(member.guild.roles, id=int(665300169285304330))
+            role = discord.utils.get(member.guild.roles, id=int(Config.VerifiedRoleID))
             await member.add_roles(role)
             buyurl = scraper.get(Config.BuyerPageURL + str(doc['Spigot ID']))  # Checks if user has purchased product
             buypage = BeautifulSoup(buyurl.content, "html.parser")

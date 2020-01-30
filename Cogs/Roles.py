@@ -1,15 +1,11 @@
 import datetime
-import logging
 
-import asyncio
-import pymongo
 import Config
 import cloudscraper
 import discord
 import requests
 from bs4 import BeautifulSoup
 from discord.ext import commands
-
 
 
 class Roles(commands.Cog):
@@ -61,7 +57,7 @@ class Roles(commands.Cog):
                 if pluginFind is not None:  # If plugin exists
                     pluginID = pluginFind['id']
                     doc = Config.USERS.find_one({"user_id": ctx.author.id})
-                    if doc is None or doc['verified'] == False:
+                    if doc is None or doc['verified'] is False:
                         embed = discord.Embed(
                             title="Role Join Error",
                             description="You are Not Verified! Please use v!verify to continue!",
@@ -81,7 +77,7 @@ class Roles(commands.Cog):
                             print("User didn't buy :(")
                             embed = discord.Embed(
                                 title="No Purchase Found",
-                                description="You have not purchased any product from illyria",
+                                description="You have not purchased any product from this store.",
                                 color=Config.MAINCOLOR
                             )
                             await ctx.send(embed=embed)
@@ -174,11 +170,10 @@ class Roles(commands.Cog):
             else:  # user gave a role name
                 pluginFind = Config.PLUGINS.find_one({"name": name.lower()})
                 if pluginFind is not None:
-                    pluginID = pluginFind['id']
                     doc = Config.USERS.find_one({"user_id": ctx.author.id})
                     if doc is None or doc['verified'] is False:  # user is not defined
                         embed = discord.Embed(
-                            title="Role Join Error",
+                            title="Role Leave Error",
                             description="You are Not Verified! Please use v!verify to continue!",
                             color=Config.ERRORCOLOR
                         )

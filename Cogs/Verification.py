@@ -1,16 +1,12 @@
 import random
 import string
-import logging
 
-import pymongo
-import asyncio
+import Config
 import cloudscraper
 import discord
 import requests
 from bs4 import BeautifulSoup
 from discord.ext import commands
-
-import Config
 
 scraper = cloudscraper.create_scraper()
 
@@ -67,7 +63,7 @@ class Verification(commands.Cog):
                             print("User didnt buy :(")
                             embed = discord.Embed(
                                 title="No Purchase Found",
-                                description="You have not purchased any product from illyria",
+                                description="You have not purchased any product from this store.",
                                 color=Config.MAINCOLOR
                             )
                             await ctx.send(embed=embed)
@@ -153,7 +149,7 @@ class Verification(commands.Cog):
                         )
                         await ctx.send(embed=embed)
                     elif doc['secretCode'] in userStatus.text:
-                        role = discord.utils.get(ctx.guild.roles, id=int(578127751337213973))
+                        role = discord.utils.get(ctx.guild.roles, id=int(Config.VerifiedRoleID))
                         Config.USERS.update_one({"user_id": ctx.author.id}, {"$set": {"verified": True}})
                         await ctx.author.add_roles(role)  # Gives user Verified Role
                         embed = discord.Embed(
